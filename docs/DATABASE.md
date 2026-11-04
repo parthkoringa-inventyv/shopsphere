@@ -8,46 +8,46 @@ Use UUIDs or another consistently chosen key strategy. Document the trade-off. U
 
 ## 2. Initial entity inventory
 
-| Table / aggregate | Important contents |
-|---|---|
-| users | normalized email, password hash, status, timestamps |
-| roles | role code and description |
-| permissions | permission code and description |
-| user_roles | user-role mapping |
-| role_permissions | role-permission mapping |
-| sessions | hashed session ID, user, expiry, last activity, revocation |
-| refresh_token_families | user, family ID, revocation state |
-| refresh_tokens | token hash, parent/replacement relation, expiry, consumed timestamp |
-| email_verification_tokens | token hash, user, expiry, consumed timestamp |
-| password_reset_tokens | token hash, user, expiry, consumed timestamp |
-| addresses | owner and normalized address fields |
-| categories | name, slug, parent category |
-| brands | name and slug |
-| products | name, slug, status, descriptions, category, brand |
-| product_variants | product, SKU, options, price override |
-| product_images | storage key/URL, order, alt text |
-| product_attributes | attribute definitions/values |
-| inventory | variant, on-hand, reserved/version |
-| inventory_movements | variant, delta, reason, actor, reference |
-| inventory_reservations | order/checkout reference, variant, quantity, expiry, status |
-| carts | user or guest identifier, expiry |
-| cart_items | cart, variant, quantity |
-| wishlists | user |
-| wishlist_items | wishlist, product/variant |
-| coupons | code, rules, dates, limits |
-| coupon_usages | coupon, user, order, redemption state |
-| orders | order number, user, totals, currency, address snapshot, state |
-| order_items | product/variant snapshot, quantity, unit price, tax/discount |
-| order_status_history | from/to state, actor, reason, timestamp |
-| payments | order, provider, provider reference, amount, state |
-| payment_webhook_events | provider event ID, payload metadata, processing state |
-| refunds | payment, amount, provider reference, state |
-| shipments | order, provider, tracking reference, state |
-| shipment_events | shipment, status, event time |
-| reviews | user, order item, product, rating, body, moderation |
-| notifications | user, type, payload, read/delivery state |
-| outbox_events | aggregate, event type, payload, publish state |
-| audit_logs | actor, action, target, metadata, timestamp |
+| Table / aggregate         | Important contents                                                  |
+| ------------------------- | ------------------------------------------------------------------- |
+| users                     | normalized email, password hash, status, timestamps                 |
+| roles                     | role code and description                                           |
+| permissions               | permission code and description                                     |
+| user_roles                | user-role mapping                                                   |
+| role_permissions          | role-permission mapping                                             |
+| sessions                  | hashed session ID, user, expiry, last activity, revocation          |
+| refresh_token_families    | user, family ID, revocation state                                   |
+| refresh_tokens            | token hash, parent/replacement relation, expiry, consumed timestamp |
+| email_verification_tokens | token hash, user, expiry, consumed timestamp                        |
+| password_reset_tokens     | token hash, user, expiry, consumed timestamp                        |
+| addresses                 | owner and normalized address fields                                 |
+| categories                | name, slug, parent category                                         |
+| brands                    | name and slug                                                       |
+| products                  | name, slug, status, descriptions, category, brand                   |
+| product_variants          | product, SKU, options, price override                               |
+| product_images            | storage key/URL, order, alt text                                    |
+| product_attributes        | attribute definitions/values                                        |
+| inventory                 | variant, on-hand, reserved/version                                  |
+| inventory_movements       | variant, delta, reason, actor, reference                            |
+| inventory_reservations    | order/checkout reference, variant, quantity, expiry, status         |
+| carts                     | user or guest identifier, expiry                                    |
+| cart_items                | cart, variant, quantity                                             |
+| wishlists                 | user                                                                |
+| wishlist_items            | wishlist, product/variant                                           |
+| coupons                   | code, rules, dates, limits                                          |
+| coupon_usages             | coupon, user, order, redemption state                               |
+| orders                    | order number, user, totals, currency, address snapshot, state       |
+| order_items               | product/variant snapshot, quantity, unit price, tax/discount        |
+| order_status_history      | from/to state, actor, reason, timestamp                             |
+| payments                  | order, provider, provider reference, amount, state                  |
+| payment_webhook_events    | provider event ID, payload metadata, processing state               |
+| refunds                   | payment, amount, provider reference, state                          |
+| shipments                 | order, provider, tracking reference, state                          |
+| shipment_events           | shipment, status, event time                                        |
+| reviews                   | user, order item, product, rating, body, moderation                 |
+| notifications             | user, type, payload, read/delivery state                            |
+| outbox_events             | aggregate, event type, payload, publish state                       |
+| audit_logs                | actor, action, target, metadata, timestamp                          |
 
 Do not implement all tables at once. Model each phase's needs and evolve through migrations.
 
@@ -68,6 +68,7 @@ Do not implement all tables at once. Model each phase's needs and evolve through
 ## 4. Transactions and concurrency exercises
 
 Implement and test:
+
 1. Register user plus token/outbox records where atomicity is required.
 2. Reserve multiple variants atomically.
 3. Create order and order-item snapshots.
@@ -77,6 +78,7 @@ Implement and test:
 7. Refund and update related states.
 
 Study:
+
 - ACID.
 - Read Committed, Repeatable Read, Serializable.
 - Row locks and `SELECT ... FOR UPDATE`.
@@ -87,9 +89,66 @@ Study:
 
 Do not keep a database transaction open while calling an external API.
 
-## 5. Prisma and raw SQL learning requirements
+## 5. Prisma migration workflow
+
+Prisma Migrate manages database schema changes. Every schema change must be represented by a migration committed to Git.
+
+### Development
+
+Run commands from `apps/api`:
+
+| Command                     | Purpose                                         |
+| --------------------------- | ----------------------------------------------- |
+| `npm run db:generate`       | Generate Prisma Client from the current schema  |
+| `npm run db:migrate:dev`    | Create and apply a migration during development |
+| `npm run db:migrate:status` | Check migration status                          |
+
+Only create the first migration after the first real database schema has been agreed upon. Until then, an empty database and a successful Prisma connectivity check are sufficient.
+
+### Deployment
+
+Run from `apps/api`:
+
+```bash
+npm run db:migrate:deploy
+```
+
+This applies existing committed migrations to the deployment database. It does not create new migrations.
+
+### Migration guidelines
+
+- Commit migration files to Git.
+- Do not manually modify a database schema that should be managed by Prisma Migrate.
+- Do not create empty migrations just to initialize migration tracking.
+- Review generated SQL before applying important schema changes.
+- Never use development migration commands against the production database.
+- Back up important data before risky schema changes.
+
+### Current Phase 1 Prisma implementation
+
+The current API uses **Prisma 7** with the PostgreSQL driver adapter.
+
+- `prisma/schema.prisma` declares the PostgreSQL provider and configures the generated Prisma Client output at `src/generated/prisma`.
+- `prisma.config.ts` supplies the datasource URL to Prisma CLI commands. The shared repository-root `.env` file is loaded by this configuration.
+- Runtime database access uses `@prisma/adapter-pg` with the `pg` driver. The API creates one module-scoped `PrismaClient` instance and disconnects it during graceful shutdown.
+- `checkDatabaseConnection()` executes `SELECT 1` through Prisma. The readiness endpoint uses this check and reports dependency readiness without returning database credentials or connection details.
+- The diagnostic transaction applies a local statement timeout; it does not change persistent database configuration.
+
+The schema intentionally has **no application models and no migration files at this stage**. This is deliberate: the first migration must wait until the first real schema has been agreed upon. Generating Prisma Client and checking database connectivity do not require creating tables or an empty migration.
+
+Run Prisma CLI commands from `apps/api`:
+
+```bash
+npm run db:generate
+npm run db:migrate:status
+```
+
+`db:generate` generates the client from the current schema. `db:migrate:status` can report that no migrations exist; that is the expected state until the first real schema is approved.
+
+## 6. Prisma and raw SQL learning requirements
 
 Prisma:
+
 - Schema modeling and relations.
 - Migrations and generated client.
 - Nested writes and transactions.
@@ -99,6 +158,7 @@ Prisma:
 - Understand the SQL Prisma generates.
 
 Raw SQL:
+
 - Parameterized queries only.
 - Joins, aggregates, CTEs and window functions.
 - `INSERT ... ON CONFLICT`.
@@ -109,11 +169,12 @@ Raw SQL:
 
 Never concatenate user input into SQL strings.
 
-## 6. Data volume and benchmarking
+## 7. Data volume and benchmarking
 
 Seed synthetic data progressively. Start with 1k products and 5k orders; scale toward 10k users, 50k products/variants, 100k orders and 500k order items locally if machine resources allow.
 
 Measure:
+
 - Query plan.
 - Execution time.
 - Rows scanned/returned.
@@ -123,7 +184,7 @@ Measure:
 
 Do not use a tiny free hosted database for large benchmark datasets. Perform large-scale load tests locally.
 
-## 7. Backup and recovery
+## 8. Backup and recovery
 
 - Export schema and data locally.
 - Practice restoring into a fresh local PostgreSQL instance.

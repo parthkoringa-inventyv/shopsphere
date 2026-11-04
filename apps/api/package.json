@@ -14,7 +14,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:check": "node --env-file=../../.env --import=tsx scripts/check-database.ts",
-    "db:redis": "node --env-file=../../.env --import=tsx scripts/check-redis.ts"
+    "db:redis": "node --env-file=../../.env --import=tsx scripts/check-redis.ts",
+    "db:generate": "prisma generate",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:status": "prisma migrate status"
   },
   "keywords": [],
   "author": "",

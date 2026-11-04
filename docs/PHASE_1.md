@@ -7,6 +7,7 @@
 ## 1. Phase 1 outcomes
 
 By the end:
+
 - Repository structure is clear and documented.
 - Node/TypeScript/Express API starts reliably.
 - Angular app starts and can call the API.
@@ -21,6 +22,7 @@ By the end:
 ## 2. Architecture decisions to lock
 
 ### Backend
+
 - Express with TypeScript strict mode.
 - Keep app construction separate from listening (`createApp()` vs `server.ts`) so tests can import the app without binding a port.
 - Use a modular folder layout; create only `health` and `system` foundations initially.
@@ -32,6 +34,7 @@ By the end:
 - Add a request ID to every request/response and log entry.
 
 ### Frontend
+
 - Angular 21 standalone architecture.
 - Feature-based organization, lazy routes when features arrive.
 - Typed API client/service layer.
@@ -40,12 +43,14 @@ By the end:
 - No authentication UI or business screens yet.
 
 ### Data infrastructure
+
 - PostgreSQL local container with named volume.
 - Redis local container with password in development configuration where practical.
 - Health checks for both.
 - No cloud services in Phase 1.
 
 ### Repository
+
 Use a single Git repository with `apps/api`, `apps/web`, `infra` and `docs`. A monorepo is not a requirement for microservices; it simply keeps this learning project together.
 
 ## 3. Suggested folder structure
@@ -90,6 +95,7 @@ Do not add empty folders for every future module. Add a module when its first ve
 ## 4. Setup requirements
 
 ### Prerequisites
+
 - Git.
 - A currently supported Node.js LTS version compatible with Angular 21; verify Angular's official compatibility table before pinning it.
 - npm.
@@ -98,11 +104,14 @@ Do not add empty folders for every future module. Add a module when its first ve
 - VS Code or another editor.
 
 ### Local services
+
 Create Docker Compose services for:
+
 - PostgreSQL.
 - Redis.
 
 Requirements:
+
 - Named volumes for persistence.
 - Health checks.
 - Local-only port bindings.
@@ -111,6 +120,7 @@ Requirements:
 - Do not expose database/Redis ports to the public internet.
 
 ### Backend setup
+
 - Initialize TypeScript project.
 - Enable `strict`, `noImplicitOverride`, `noUncheckedIndexedAccess` where practical.
 - Install Express, TypeScript, tsx/runner, Zod, Pino, Prisma and test dependencies.
@@ -121,6 +131,7 @@ Requirements:
 - Validate environment at process startup; fail fast with actionable errors.
 
 ### Frontend setup
+
 - Create Angular standalone application.
 - Enable strict TypeScript/template checks.
 - Configure API base URL through environment configuration.
@@ -131,6 +142,7 @@ Requirements:
 ## 5. Phase 1 implementation tasks
 
 ### Task 1 — Repository hygiene
+
 - Create repository and default branch.
 - Add `.gitignore` for Node, Angular, environment files, logs, build output and IDE files.
 - Add `.editorconfig`.
@@ -139,6 +151,7 @@ Requirements:
 - Add a pull-request/commit convention if desired.
 
 ### Task 2 — Local infrastructure
+
 - Add PostgreSQL and Redis to Compose.
 - Configure health checks and volumes.
 - Start and stop services.
@@ -146,6 +159,7 @@ Requirements:
 - Verify data survives container restart.
 
 ### Task 3 — Express foundation
+
 - Create app factory and server bootstrap.
 - Add environment schema validation.
 - Add request ID middleware.
@@ -159,13 +173,19 @@ Requirements:
 - Ensure errors do not leak stack traces in production mode.
 
 ### Task 4 — Database foundation
-- Configure Prisma datasource.
-- Create the initial migration only when the first real schema is agreed; an empty database connection check is sufficient at the beginning.
-- Add a database connectivity check to readiness.
-- Demonstrate one Prisma query in a test or health diagnostic without exposing database details publicly.
-- Document migration commands.
+
+**Status: Complete (2026-11-04)**
+
+- [x] Configure Prisma datasource.
+- [x] Defer the initial migration until the first real schema is agreed; an empty database connection check is sufficient at this stage.
+- [x] Add a database connectivity check to readiness.
+- [x] Demonstrate a Prisma query through the readiness diagnostic without exposing database details publicly.
+- [x] Document migration commands and the current Prisma 7 setup in `DATABASE.md`.
+
+No application models, tables or migrations were created as part of this task. That is intentional and follows the agreed Phase 1 scope.
 
 ### Task 5 — Angular foundation
+
 - Create standalone Angular application.
 - Add typed health API service.
 - Add a minimal diagnostic page.
@@ -173,6 +193,7 @@ Requirements:
 - Keep API URL configurable.
 
 ### Task 6 — Quality automation
+
 - Add format and lint scripts.
 - Add TypeScript typecheck.
 - Add at least one API unit/integration test.
@@ -181,7 +202,9 @@ Requirements:
 - Do not store deployment secrets in CI yet.
 
 ### Task 7 — Architecture notes
+
 Record decisions for:
+
 - Modular monolith.
 - Express app factory.
 - Prisma plus raw SQL.
@@ -193,6 +216,7 @@ Record decisions for:
 ## 6. Concepts to understand before moving on
 
 You should be able to explain:
+
 - Node.js process and event loop at a high level.
 - Difference between Express app and listening HTTP server.
 - TypeScript compile-time types vs runtime validation.
@@ -210,18 +234,21 @@ You should be able to explain:
 ## 7. Phase 1 acceptance criteria
 
 ### Repository
+
 - [ ] Clean install works from documented steps.
 - [ ] No secrets or `.env` files are committed.
 - [ ] README explains prerequisites and startup.
 - [ ] Node version is pinned and compatible.
 
 ### Infrastructure
+
 - [ ] `docker compose up -d` starts PostgreSQL and Redis.
 - [ ] Health checks become healthy.
 - [ ] PostgreSQL and Redis data survive container restart.
 - [ ] Ports are bound for local development only.
 
 ### API
+
 - [ ] API starts with validated environment.
 - [ ] `/api/v1/health/live` reports process liveness.
 - [ ] `/api/v1/health/ready` checks required dependencies.
@@ -232,6 +259,7 @@ You should be able to explain:
 - [ ] `npm run typecheck`, lint, tests and build pass.
 
 ### Frontend
+
 - [ ] Angular app starts.
 - [ ] Diagnostic page calls API.
 - [ ] API unavailable state is handled.
@@ -239,11 +267,13 @@ You should be able to explain:
 - [ ] Angular strict checks pass.
 
 ### CI
+
 - [ ] Pull request workflow installs dependencies.
 - [ ] Lint, typecheck, tests and builds run.
 - [ ] Workflow fails when a quality gate fails.
 
 ### Understanding
+
 - [ ] You can explain each major folder.
 - [ ] You can explain middleware execution order.
 - [ ] You can explain how API readiness is determined.
@@ -252,6 +282,7 @@ You should be able to explain:
 ## 8. Out of scope for Phase 1
 
 Do not implement:
+
 - Registration/login.
 - Session or JWT logic.
 - User/role tables.
@@ -267,6 +298,7 @@ Those are later phases. The point is to establish a reliable foundation, not to 
 ## 9. Phase 1 review questions
 
 Before moving to Phase 2, answer these in your own words:
+
 1. Why should tests import `createApp()` without starting a network listener?
 2. Why is Zod required if TypeScript already checks types?
 3. Why are liveness and readiness different?

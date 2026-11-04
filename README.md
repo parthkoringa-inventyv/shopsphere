@@ -1,175 +1,127 @@
-# ShopSphere — Full-Stack E-Commerce Engineering Challenge
+# ShopSphere
 
-> A backend-first, production-style e-commerce platform built from scratch with Angular, Node.js, Express, PostgreSQL and Redis — from requirements and architecture through testing and free-tier deployment.
+A backend-first e-commerce engineering challenge. This repository contains the application code and the practical instructions needed to run the project locally.
 
-## Project mission
+For the challenge goals, scope, and engineering principles, see [The ShopSphere Engineering Challenge](docs/CHALLENGE.md).
 
-Build a complete single-vendor e-commerce platform while learning the engineering principles behind real production systems. The goal is not merely to make a shopping UI work. The goal is to understand and demonstrate database design, REST API design, authentication, authorization, transactions, concurrency, caching, asynchronous processing, security, observability, performance and deployment.
+## Local development setup
 
-This is a **modular monolith first**. The design should preserve clear module boundaries without introducing microservices prematurely.
+Run commands from the directory indicated in each step. The examples assume the repository was cloned into a directory named `shopsphere`.
 
-## Non-negotiable cost constraint
+### 1. Clone the repository
 
-The project must be developed and deployed using **$0 services and free plans only**. Do not start a paid trial, enable automatic upgrades, add a paid custom domain, or rely on a service that can silently charge for overages. Before creating an account or resource, re-check the provider's current plan, payment-card requirements, usage limits and overage behavior.
-
-Free-tier services can pause, sleep, impose quotas, change terms or be discontinued. This project is a learning/demo deployment, **not a guaranteed always-on commercial production service**. Keep local backups of database data and a reproducible local development environment.
-
-See [Free deployment strategy](docs/FREE_DEPLOYMENT.md).
-
-## Chosen stack
-
-| Area | Choice |
-|---|---|
-| Frontend | Angular 21, standalone components, TypeScript |
-| Backend | Node.js, TypeScript, Express |
-| API | Versioned REST API, `/api/v1` |
-| Primary database | PostgreSQL |
-| Data access | Prisma ORM plus deliberate raw SQL exercises |
-| Cache/session/queue infrastructure | Redis-compatible service |
-| Authentication | Server-side sessions **and** JWT access/refresh-token implementation |
-| Validation | Zod (or an explicitly documented equivalent) |
-| API documentation | OpenAPI / Swagger |
-| Logging | Pino |
-| Unit/integration tests | Vitest or Jest + Supertest |
-| Browser E2E | Playwright |
-| Load testing | k6 |
-| Containers | Docker + Docker Compose |
-| CI | GitHub Actions |
-| Observability | Structured logs first; OpenTelemetry/metrics as later milestones |
-
-Use currently supported Node.js LTS releases and pin the selected version in `.nvmrc` or `.node-version`, `package.json` engines and CI. Verify Angular compatibility before selecting the Node version.
-
-## Product scope
-
-### Customer application
-- Registration, email verification, login, logout and account recovery.
-- Profile and address management.
-- Product browsing, categories, variants, search, filtering, sorting and pagination.
-- Guest and authenticated shopping carts.
-- Wishlist.
-- Coupons and promotions.
-- Checkout, payment sandbox integration and order history.
-- Cancellation, returns, refunds and shipment tracking.
-- Product reviews and ratings.
-- Email and in-app notifications.
-
-### Admin / operations application
-- Role- and permission-controlled admin access.
-- Product, category, brand and variant management.
-- Inventory management and stock movement history.
-- Order processing and status transitions.
-- Coupon management.
-- Review moderation.
-- User and role management.
-- Audit logs and basic reports.
-
-### Later extension
-Multi-vendor marketplace support is explicitly out of the first release. Add it only after the single-vendor system is stable.
-
-## Backend modules
-
-`auth`, `users`, `access-control`, `catalog`, `inventory`, `cart`, `wishlist`, `pricing`, `coupons`, `checkout`, `orders`, `payments`, `shipping`, `reviews`, `notifications`, `admin`, `analytics`, `audit`.
-
-Each module owns its business rules and public service interface. Avoid cross-module writes to another module's tables. Shared database transactions may be coordinated by an application service, but ownership and invariants must remain explicit.
-
-## Engineering principles
-
-1. PostgreSQL is the durable source of truth for business data.
-2. Redis is an optimization / ephemeral coordination layer, never the only copy of orders, payments or inventory.
-3. The server recalculates price, discount, tax, shipping and payable totals. Never trust browser-supplied totals.
-4. Authorization is enforced on the server and at the resource/ownership level.
-5. Every important state transition is validated by business rules.
-6. Payment webhooks and retryable background jobs are idempotent.
-7. Inventory correctness is enforced by database constraints and transactions; Redis locks are not the source of truth.
-8. Secrets, passwords, session identifiers, access tokens and payment credentials must not appear in logs or source control.
-9. Performance claims require repeatable measurements and documented test conditions.
-10. Build the simplest correct design first; add abstractions only when they solve a demonstrated problem.
-
-## Documentation map
-
-| Document | Purpose |
-|---|---|
-| [Requirements](docs/REQUIREMENTS.md) | Functional and non-functional product specification |
-| [Architecture](docs/ARCHITECTURE.md) | System boundaries, modules, data flow and key decisions |
-| [Database requirements](docs/DATABASE.md) | Entities, constraints, transactions and SQL learning objectives |
-| [API requirements](docs/API.md) | REST conventions, response format and endpoint scope |
-| [Security requirements](docs/SECURITY.md) | Authentication, authorization and threat controls |
-| [Testing strategy](docs/TESTING.md) | Test levels and mandatory failure/concurrency scenarios |
-| [Free deployment strategy](docs/FREE_DEPLOYMENT.md) | Zero-cost hosting plan and limitations |
-| [Phase 1 plan](docs/PHASE_1.md) | Detailed foundation phase, setup and acceptance criteria |
-| [Decision log](docs/DECISIONS.md) | Record architecture decisions and trade-offs |
-
-## Definition of done
-
-A feature is not complete merely because its happy path works. It is complete when:
-- Its requirements and API contract are documented.
-- Input is validated server-side.
-- Authentication and authorization are correct.
-- Database constraints protect important invariants.
-- Failure cases are handled intentionally.
-- Unit/integration tests cover business rules.
-- Logs are useful but do not leak secrets.
-- Relevant performance and security concerns have been reviewed.
-- Documentation is updated.
-
-## Suggested repository layout
-
-```text
-shopsphere/
-├── apps/
-│   ├── api/                 # Express API and application services
-│   └── web/                 # Angular application
-├── packages/
-│   └── contracts/           # Optional shared API types/schemas; no runtime coupling
-├── infra/
-│   ├── docker/
-│   └── scripts/
-├── docs/
-├── .github/workflows/
-├── .gitignore
-├── .editorconfig
-├── .nvmrc
-└── README.md
+```bash
+git clone https://github.com/parthkoringa-inventyv/shopsphere.git
+cd shopsphere
 ```
 
-Do not create every folder on day one. Phase 1 creates only the foundation needed for a clean start.
+### 2. Create the local environment file
 
-## Working agreement
+Run from the repository root:
 
-Work phase by phase. For each module:
-1. Read and clarify requirements.
-2. Learn the underlying concepts.
-3. Discuss design alternatives and trade-offs.
-4. Implement a small vertical slice.
-5. Test success, failure, security and concurrency cases.
-6. Review the code and explain the design.
-7. Update documentation and the decision log.
-
-**First milestone:** complete Phase 1 and its acceptance criteria before implementing product features.
-
-# local setup instructions
-### 1. Clone the repository
-git clone <your-repository-url>
-cd "Shopsphere Challange"
-
-### 2. Create your local environment file
+```bash
 cp .env.example .env
+```
+
+Review `.env` and set the local development values. Do not commit `.env`.
 
 ### 3. Install API dependencies
+
+```bash
 cd apps/api
 npm install
+```
 
 ### 4. Generate Prisma Client
-npx prisma generate
 
-### 5. Start infrastructure
+Run from `apps/api`:
+
+```bash
+npm run db:generate
+```
+
+This generates Prisma Client from the current schema. It does not create database tables or migrations.
+
+### 5. Start local infrastructure
+
+Return to the repository root:
+
+```bash
 cd ../..
 docker compose --env-file .env -f infra/docker/docker-compose.yml up -d
+```
 
-### 6. Check Connections
+### 6. Check PostgreSQL and Redis connectivity
+
+Run from `apps/api`:
+
+```bash
+cd apps/api
 npm run db:check
 npm run db:redis
+```
+
+These are diagnostic checks, not migrations.
 
 ### 7. Start the API
-cd apps/api
+
+Run from `apps/api`:
+
+```bash
 npm run dev
+```
+
+## API health endpoints
+
+- `GET /api/v1/health/live` — reports whether the API process is running.
+- `GET /api/v1/health/ready` — checks whether required dependencies, including PostgreSQL and Redis, are ready.
+
+The readiness endpoint must not expose connection strings, credentials, or other sensitive database details.
+
+## API development commands
+
+Run all commands in this table from `apps/api`.
+
+| Command                     | Purpose                                              |
+| --------------------------- | ---------------------------------------------------- |
+| `npm run dev`               | Start the API in development mode with file watching |
+| `npm start`                 | Start the compiled API from `dist/`                  |
+| `npm run typecheck`         | Run TypeScript type checking without emitting files  |
+| `npm run lint`              | Run ESLint                                           |
+| `npm test`                  | Run the Vitest test suite once                       |
+| `npm run test:watch`        | Run Vitest in watch mode                             |
+| `npm run build`             | Compile the API TypeScript source                    |
+| `npm run format`            | Format API files with Prettier                       |
+| `npm run format:check`      | Check API formatting without modifying files         |
+| `npm run db:generate`       | Generate Prisma Client                               |
+| `npm run db:check`          | Run the PostgreSQL connectivity diagnostic           |
+| `npm run db:redis`          | Run the Redis connectivity diagnostic                |
+| `npm run db:migrate:status` | Inspect Prisma migration status                      |
+| `npm run db:migrate:dev`    | Create and apply a development migration             |
+| `npm run db:migrate:deploy` | Apply existing migrations to a deployment database   |
+
+## Database migration quick reference
+
+- Do not create the first migration until the first real database schema has been agreed upon.
+- Until then, an empty database and a successful Prisma connectivity check are sufficient.
+- Use `db:migrate:dev` only for local development after a schema change has been designed.
+- Review and commit migration files to Git.
+- Use `db:migrate:deploy` to apply committed migrations in a deployment environment. It does not create migrations.
+- Never run development migration commands against the production database.
+
+For the complete workflow and migration guidelines, see [Prisma migration workflow](docs/DATABASE.md#5-prisma-migration-workflow).
+
+## Project documentation
+
+| Document                                            | Purpose                                                             |
+| --------------------------------------------------- | ------------------------------------------------------------------- |
+| [Engineering challenge overview](docs/CHALLENGE.md) | Mission, scope, stack, engineering principles and working agreement |
+| [Requirements](docs/REQUIREMENTS.md)                | Functional and non-functional product specification                 |
+| [Architecture](docs/ARCHITECTURE.md)                | System boundaries, modules, data flow and key decisions             |
+| [Database requirements](docs/DATABASE.md)           | Data design, constraints, transactions, Prisma and raw SQL          |
+| [API requirements](docs/API.md)                     | REST conventions, response format and endpoint scope                |
+| [Security requirements](docs/SECURITY.md)           | Authentication, authorization and security controls                 |
+| [Testing strategy](docs/TESTING.md)                 | Test levels and required failure/concurrency scenarios              |
+| [Free deployment strategy](docs/FREE_DEPLOYMENT.md) | Zero-cost hosting strategy, constraints and limitations             |
+| [Phase 1 plan](docs/PHASE_1.md)                     | Foundation phase, setup steps and acceptance criteria               |
+| [Decision log](docs/DECISIONS.md)                   | Architecture decisions and trade-offs                               |
