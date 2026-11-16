@@ -1,0 +1,59 @@
+<main class="health">
+  <header class="health__header">
+    <div>
+      <h1>System status</h1>
+      <p class="health__subtitle">Live diagnostics for the ShopSphere API and its dependencies.</p>
+    </div>
+    <button type="button" class="health__refresh" (click)="checkHealth()">Check again</button>
+  </header>
+
+  @if (overall(); as status) {
+    <p class="health__overall" role="status" aria-live="polite" [attr.data-status]="status">
+      @switch (status) {
+        @case ('operational') {
+          All systems operational
+        }
+        @case ('degraded') {
+          API is running, but PostgreSQL or Redis is unavailable
+        }
+        @case ('offline') {
+          API is unreachable
+        }
+      }
+    </p>
+  }
+
+  <section class="health__checks" aria-label="Health checks">
+    @for (item of checks(); track item.id) {
+      <article class="check" [attr.data-state]="item.check?.state">
+        <header class="check__header">
+          <h2>{{ item.title }}</h2>
+          @if (item.check; as check) {
+            <span class="check__badge">{{ check.state === 'up' ? 'Up' : 'Down' }}</span>
+          }
+        </header>
+        <p class="check__description">{{ item.description }}</p>
+        @if (item.check; as check) {
+          <p class="check__message">{{ check.message }}</p>
+          @if (check.code || check.requestId) {
+            <p class="check__meta">
+              @if (check.code; as code) {
+                Code: <code>{{ code }}</code>
+              }
+              @if (check.code && check.requestId) {
+                ·
+              }
+              @if (check.requestId; as requestId) {
+                Request ID: <code>{{ requestId }}</code>
+              }
+            </p>
+          }
+        }
+      </article>
+    }
+  </section>
+
+  @if (lastCheckedAt(); as checkedAt) {
+    <p class="health__checked-at">Last checked at {{ checkedAt | date: 'mediumTime' }}</p>
+  }
+</main>

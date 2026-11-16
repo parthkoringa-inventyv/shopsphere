@@ -23,10 +23,13 @@ npm-debug.log*
 *.pid
 *.seed
 
-# IDE
-.vscode/*
-!.vscode/extensions.json
+# IDE / editor settings
+.vscode/
 .idea/
+
+# AI agent tooling
+.agents/
+skills-lock.json
 
 # OS
 .DS_Store

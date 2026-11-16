@@ -1,0 +1,120 @@
+:host {
+  // Neutral accent until a check reports; the state selectors below override it.
+  --ink: #d1d9e0;
+  --tint: #f6f8fa;
+
+  display: block;
+  color: #1f2328;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+// Each state sets the accent colors used by the banner and cards.
+[data-status='operational'],
+[data-state='up'] {
+  --ink: #1a7f37;
+  --tint: #dafbe1;
+}
+
+[data-status='degraded'] {
+  --ink: #9a6700;
+  --tint: #fff8c5;
+}
+
+[data-status='offline'],
+[data-state='down'] {
+  --ink: #d1242f;
+  --tint: #ffebe9;
+}
+
+.health {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.health__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+  }
+}
+
+.health__subtitle,
+.health__checked-at,
+.check__description {
+  margin: 0.25rem 0 0;
+  color: #59636e;
+}
+
+.health__refresh {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d9e0;
+  border-radius: 0.375rem;
+  background: #f6f8fa;
+  font: inherit;
+  cursor: pointer;
+}
+
+.health__overall {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--tint);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.health__checks {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  margin-bottom: 1rem;
+}
+
+.check {
+  padding: 1rem;
+  border: 1px solid #d1d9e0;
+  border-left: 4px solid var(--ink);
+  border-radius: 0.5rem;
+
+  p {
+    margin: 0.5rem 0 0;
+  }
+}
+
+.check__header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+
+  h2 {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+}
+
+.check__badge {
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  background: var(--tint);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.check__meta {
+  color: #59636e;
+  font-size: 0.875rem;
+}
