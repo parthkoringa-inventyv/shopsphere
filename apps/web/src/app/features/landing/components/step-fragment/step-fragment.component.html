@@ -1,0 +1,82 @@
+<div class="ui" data-ui role="img" [attr.aria-label]="label()">
+  @switch (step()) {
+    @case ('find') {
+      <div class="ui__search">
+        <svg class="ui__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <path d="M15.5 15.5 21 21" />
+        </svg>
+        <span>linen shirt</span>
+      </div>
+      <div class="ui__chips">
+        <span class="ui__chip is-on">Size M</span>
+        <span class="ui__chip is-on">Olive</span>
+        <span class="ui__chip is-on">Under ₹2,000</span>
+        <span class="ui__chip">Cotton</span>
+      </div>
+      <div class="ui__row ui__row--meta">
+        <span>24 results</span><span>Price: low to high</span>
+      </div>
+      <div class="ui__row"><span>Linen shirt, olive</span><b>₹1,299</b></div>
+      <div class="ui__row"><span>Linen shirt, sage</span><b>₹1,349</b></div>
+      <div class="ui__row"><span>Linen shirt, sky</span><b>₹1,399</b></div>
+    }
+    @case ('bag') {
+      <div class="ui__row ui__row--meta">
+        <span>Your bag</span><span class="ui__chip is-on">Guest</span>
+      </div>
+      <div class="ui__row">
+        <span>Linen shirt, olive, M</span>
+        <span class="ui__stepper"><span>−</span><b>1</b><span>+</span></span>
+      </div>
+      <div class="ui__row">
+        <span>Steel bottle, 750 ml</span>
+        <span class="ui__stepper"><span>−</span><b>1</b><span>+</span></span>
+      </div>
+      <div class="ui__row ui__row--total"><b>Subtotal</b><b>₹1,848</b></div>
+      <span class="ui__note">Kept on this device until you sign in</span>
+      <span class="ui__button">Sign in to check out</span>
+    }
+    @case ('save') {
+      <div class="ui__row ui__row--meta"><span>Wishlist</span><span>3 saved</span></div>
+      @for (item of wishlist; track item) {
+        <div class="ui__row">
+          <span class="ui__saved">
+            <svg class="ui__heart" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 20s-7-4.4-9-9a4.6 4.6 0 0 1 9-2.6A4.6 4.6 0 0 1 21 11c-2 4.6-9 9-9 9Z" />
+            </svg>
+            {{ item }}
+          </span>
+          <span class="ui__link">Move to bag</span>
+        </div>
+      }
+      <span class="ui__note">Saved to your account, on every device</span>
+    }
+    @case ('checkout') {
+      <div class="ui__row"><span>Items (2)</span><span>₹2,598</span></div>
+      <div class="ui__row">
+        <span>Coupon WELCOME10<small>10% off, up to ₹200, on ₹999 or more</small></span>
+        <span>−₹200</span>
+      </div>
+      <div class="ui__row">
+        <span>Delivery<small>Free on orders over ₹999</small></span
+        ><span>₹0</span>
+      </div>
+      <div class="ui__row ui__row--total"><b>Total</b><b>₹2,398</b></div>
+      <span class="ui__note">Worked out again by the shop before you pay</span>
+    }
+    @case ('track') {
+      <div class="ui__row ui__row--meta">
+        <span>Order SS-10482</span><span class="ui__chip is-on">Shipped</span>
+      </div>
+      <ol class="ui__steps">
+        <li class="is-done">Placed</li>
+        <li class="is-done">Paid</li>
+        <li class="is-done">Packed</li>
+        <li class="is-now">Shipped today, 4:12 pm</li>
+        <li>Delivered</li>
+      </ol>
+      <span class="ui__note">Email sent: your order is on its way</span>
+    }
+  }
+</div>

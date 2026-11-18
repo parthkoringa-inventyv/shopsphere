@@ -311,3 +311,141 @@ Before moving to Phase 2, answer these in your own words:
 10. What changes when the API is deployed behind a reverse proxy?
 
 **Phase 1 is complete only when the acceptance criteria and review questions are satisfied.**
+
+**Review questions: Complete.** All 10 questions have been reviewed and understood.
+
+
+------------------------------------------------------------------------
+
+## 10. Initial deployment --- deploy the foundation before Phase 2
+
+This section supersedes the earlier statement that production deployment
+is out of scope for Phase 1. The local foundation remains the first
+implementation milestone, but a minimal public deployment is now
+required before Phase 2 begins.
+
+### Goal
+
+Publish a small, working ShopSphere foundation: Angular static site,
+Express API, hosted PostgreSQL connection, health/readiness endpoints,
+HTTPS, CI and a repeatable deployment process. Do not expose unfinished
+commerce functionality.
+
+### Task 8 --- Prepare the application for deployment
+
+1.  Confirm the Node.js version is pinned and compatible with the
+    selected Angular and backend toolchain.
+2.  Confirm API build output is deterministic and `npm run build`
+    produces the exact artifact used by deployment.
+3.  Confirm Angular production configuration reads the public API base
+    URL from build-time configuration; no secret may be included in the
+    browser bundle.
+4.  Configure the API to listen on the host-provided port and bind to
+    the expected interface.
+5.  Configure proxy awareness only for the actual hosting topology; do
+    not blindly trust forwarded headers from arbitrary clients.
+6.  Make startup fail clearly when required production configuration is
+    absent or invalid.
+7.  Keep `/health/live` independent of downstream dependencies and make
+    `/health/ready` check the dependencies required to serve requests.
+8.  Add graceful shutdown for SIGTERM/SIGINT: stop accepting new
+    requests, close database/Redis clients and finish bounded in-flight
+    work.
+9.  Add a production-safe error mode that does not return stack traces
+    or internal database details.
+10. Verify logs are structured, request-correlated and redacted.
+
+### Task 9 --- Provision \$0 hosting resources
+
+1.  Read `DEPLOYMENT_PREPARATION.md` and the current
+    `FREE_DEPLOYMENT.md`.
+2.  Re-check official provider pricing, quotas, card requirements,
+    sleep/pause rules, storage, bandwidth, backups and overage behavior
+    on the day resources are created.
+3.  Use a free provider subdomain; do not buy a custom domain.
+4.  Create the static frontend resource, API web service and PostgreSQL
+    database only after confirming each remains within the strict \$0
+    policy.
+5.  Do not use a free database with an expiry period as the durable
+    project database.
+6.  Do not provision Redis until the application actually requires it in
+    a deployed phase.
+7.  Record provider, plan, region, resource identifiers, limits and
+    dashboard links in a private operations note; never record
+    credentials there.
+8.  Disable paid auto-upgrades and do not start paid trials. If a card
+    or paid commitment is required and cannot be avoided, stop and
+    choose another provider.
+
+### Task 10 --- Configure production environment and database
+
+1.  Create production secrets independently of local `.env` files.
+2.  Configure `DATABASE_URL` and any separate migration connection
+    string required by the provider.
+3.  Configure `NODE_ENV=production`, allowed frontend origin, API public
+    origin, log level and port behavior.
+4.  Configure `AUTH_MODE` only when Phase 2 is ready; do not invent or
+    enable authentication before then.
+5.  Run the initial migration/deploy command against the hosted
+    database.
+6.  Verify the migration result and database connectivity without
+    exposing database details publicly.
+7.  Use a least-privilege runtime database role if the provider supports
+    separate migration and application roles without consuming paid
+    resources.
+8.  Keep production seed data limited to non-sensitive demo/reference
+    data. Do not seed a public default admin password.
+
+### Task 11 --- Configure CI/CD
+
+1.  Keep pull-request CI separate from deployment.
+2.  CI must install from the lockfile, lint, typecheck, test and build
+    both applications.
+3.  Configure deployment to run only after successful checks on the
+    selected protected/default branch.
+4.  Store deployment tokens in repository/environment secrets, never
+    workflow source.
+5.  Restrict deployment permissions to the minimum required.
+6.  Avoid printing secrets in workflow logs.
+7.  Ensure a failed build/test cannot deploy.
+8.  Document manual deployment as a recovery path if free CI quotas are
+    exhausted.
+
+### Task 12 --- Publish and verify the initial application
+
+1.  Deploy the API and verify `/api/v1/health/live`.
+2.  Verify `/api/v1/health/ready` reports readiness only when required
+    dependencies are available.
+3.  Deploy Angular and configure SPA fallback for client-side routes.
+4.  Open the deployed website in a clean browser session.
+5.  Verify the diagnostic page calls the deployed API over HTTPS.
+6.  Verify CORS allows only the intended frontend origin.
+7.  Verify no database URL, Redis secret, signing secret or server
+    environment value appears in downloaded frontend assets.
+8.  Verify a cold start after inactivity is handled by the UI with a
+    useful loading/retry state.
+9.  Confirm API errors are safe and useful.
+10. Record the public demo URL and deployment commit in the project
+    README.
+
+### Phase 1 deployment acceptance
+
+-   [ ] Angular site is publicly reachable over HTTPS.
+-   [ ] Express API is publicly reachable over HTTPS.
+-   [ ] Liveness and readiness endpoints behave correctly.
+-   [ ] API can connect to the hosted PostgreSQL database.
+-   [ ] CI passes before deployment.
+-   [ ] A failed CI run cannot deploy.
+-   [ ] Frontend uses the deployed API URL without embedded secrets.
+-   [ ] CORS is restricted to the intended origin.
+-   [ ] No paid plan, trial, domain or overage commitment is active.
+-   [ ] A fresh browser session can load the application.
+-   [ ] Cold-start and provider-pause limitations are documented.
+-   [ ] The previous local Docker workflow still works.
+
+### Phase 1 exit gate
+
+Do not begin Phase 2 until the local foundation is green and the minimal
+hosted foundation has passed its smoke tests. Deployment is now an
+ongoing engineering practice: every later phase must extend this
+deployment rather than defer deployment until the end.

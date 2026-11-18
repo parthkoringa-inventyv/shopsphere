@@ -1,0 +1,39 @@
+<svg viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+  @switch (art()) {
+    @case ('last-one') {
+      <rect class="k" x="44" y="58" width="96" height="72" />
+      <rect class="w" x="84" y="58" width="16" height="72" />
+      <rect class="k" x="170" y="34" width="16" height="12" />
+      <circle class="k" cx="178" cy="80" r="34" />
+      <circle class="w" cx="178" cy="80" r="27" />
+      <path class="stroke loop turn" d="M178 80 V60" />
+      <circle class="k" cx="178" cy="80" r="4" />
+    }
+    @case ('pay-twice') {
+      <rect class="k" x="78" y="12" width="84" height="128" rx="14" />
+      <rect class="w" x="88" y="26" width="64" height="98" rx="4" />
+      <rect class="k" x="98" y="94" width="44" height="18" />
+      <g class="loop pop">
+        <circle class="k" cx="184" cy="44" r="22" />
+        <path class="stroke stroke--light" d="M174 44 L181 51 L195 37" />
+      </g>
+    }
+    @case ('guest') {
+      <path class="stroke" d="M60 68 C60 30 96 30 96 68" />
+      <path class="k" d="M40 70 L52 58 H104 L116 70 V136 H40 Z" />
+      <path class="stroke loop nudge" d="M128 98 H166 M154 86 L166 98 L154 110" />
+      <circle class="k" cx="200" cy="66" r="16" />
+      <path class="k" d="M174 136 C174 104 186 90 200 90 C214 90 226 104 226 136 Z" />
+    }
+    @case ('reviews') {
+      <path
+        class="k"
+        d="M66 14 H174 V140 L160 130 L147 140 L134 130 L120 140 L106 130 L93 140 L80 130 L66 140 Z"
+      />
+      <path
+        class="w loop twinkle"
+        d="M120 36 L131 60 L157 62 L137 79 L143 104 L120 91 L97 104 L103 79 L83 62 L109 60 Z"
+      />
+    }
+  }
+</svg>

@@ -78,6 +78,13 @@ npm run dev
 
 The readiness endpoint must not expose connection strings, credentials, or other sensitive database details.
 
+## Web routes
+
+Start the Angular app from `apps/web` with `npm start` (port 4300).
+
+- `/` — the ShopSphere landing page (`features/landing`).
+- `/health` — the system status page that calls the API health endpoints (`features/health`). Until the storefront exists, the landing page footer links to it.
+
 ## API development commands
 
 Run all commands in this table from `apps/api`.

@@ -1,0 +1,185 @@
+// A board of filled tiles on the page's own margins, 8px apart, every cell used: an upper row of
+// four tiles and a lower row with the logo and the one action. Phones get two columns.
+:host {
+  display: block;
+}
+
+.footer {
+  padding: clamp(2.5rem, 5vw, 4rem) var(--margin) var(--margin);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: minmax(13.75rem, auto) minmax(20rem, auto);
+  gap: 0.5rem;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-width: 0;
+  padding: 1.5rem;
+  color: var(--on-field);
+}
+
+.tile--statement {
+  grid-column: 1 / span 4;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.tile--nav {
+  grid-column: 5 / span 3;
+  background: var(--lemon);
+}
+
+.tile--picture {
+  grid-column: 8 / span 2;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background: var(--sky);
+
+  img {
+    width: 100%;
+    max-width: 15rem;
+    height: auto;
+  }
+}
+
+.tile--status {
+  grid-column: 10 / span 3;
+  background: var(--mint);
+}
+
+.tile--brand {
+  --logo-size: clamp(4.5rem, 7vw, 7rem);
+  --logo-word-size: var(--step-head);
+  grid-column: 1 / span 8;
+  justify-content: center;
+  align-items: center;
+  background: var(--surface-raised);
+  color: var(--ink);
+}
+
+.tile--action {
+  grid-column: 9 / span 4;
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-decoration: none;
+  transition: transform var(--t-hover) var(--ease-out);
+
+  &:hover .tile__arrow {
+    transform: translate(0.35rem, -0.35rem);
+  }
+
+  &:active {
+    transform: scale(0.99);
+    transition-duration: var(--t-press);
+  }
+}
+
+.tile__statement {
+  max-width: 22ch;
+  margin: 0;
+  font: 600 var(--step-lead) / 1.15 var(--font);
+  letter-spacing: -0.02em;
+}
+
+.tile__legal {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--step-small);
+}
+
+.tile__links {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--step-body);
+  font-weight: 500;
+}
+
+.tile__links a,
+.tile__status {
+  color: inherit;
+  text-decoration: underline 2px transparent;
+  text-underline-offset: 0.3em;
+  transition: text-decoration-color var(--t-hover) var(--ease-out);
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.tile__note {
+  max-width: 26ch;
+  margin: 0;
+  font-size: var(--step-small);
+  line-height: 1.4;
+}
+
+.tile__status {
+  font: 600 var(--step-lead) / 1.1 var(--font);
+  text-decoration-color: currentColor;
+}
+
+.tile__invite {
+  font: 600 var(--step-lead) / 1.1 var(--font);
+  letter-spacing: -0.02em;
+}
+
+.tile__arrow {
+  align-self: flex-end;
+  width: 3rem;
+  height: 3rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  transition: transform var(--t-ui) var(--ease-out);
+}
+
+@media (max-width: 63.99rem) {
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 0.375rem;
+  }
+
+  .tile {
+    min-height: 11rem;
+    padding: 1.25rem;
+  }
+
+  .tile--brand {
+    --logo-size: 4rem;
+    --logo-word-size: var(--step-lead);
+    order: -2;
+    grid-column: 1 / -1;
+    min-height: 10rem;
+  }
+
+  .tile--action {
+    order: -1;
+    grid-column: 1 / -1;
+    min-height: 8rem;
+  }
+
+  .tile--nav {
+    grid-column: 1;
+  }
+
+  .tile--status {
+    grid-column: 2;
+  }
+
+  .tile--picture,
+  .tile--statement {
+    grid-column: 1 / -1;
+  }
+}

@@ -1,1 +1,148 @@
-/* You can add global styles to this file, and also import other style files */
+// Global design tokens, a minimal reset, the one button and the shared entrance motion.
+// Component looks live in component styles. Nothing here paints the body, so the /health page
+// keeps its own look; the landing page paints its own dark ground.
+
+:root {
+  // Palette "Candy on black": a near-black ground and soft white ink hold the page. The five candy
+  // colours appear only as blocks (scenes, cards, the footer field), always with near-black text.
+  --bg: #0b0b0b;
+  --surface: #161616;
+  --surface-raised: #202020;
+  --ink: #f4f4f0;
+  --muted: #a3a3a3;
+  --accent: #93f1f7;
+  --accent-ink: #0b0b0b;
+  --on-field: #0b0b0b;
+  --mint: #9ae187;
+  --cyan: #93f1f7;
+  --lemon: #f3ea7a;
+  --orange: #fbb65c;
+  --sky: #b9c8ff;
+
+  --font: 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  // Five type steps; nothing on the landing page uses a sixth.
+  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --step-head: clamp(2rem, 1.2rem + 2.6vw, 3.5rem);
+  --step-display: clamp(2.25rem, 4.7vw, 5.75rem);
+
+  --margin: clamp(1rem, 2.2vw, 2rem);
+  --gutter: clamp(1rem, 2vw, 1.75rem);
+  --section-space: clamp(7.5rem, 12vw, 12rem);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --t-press: 140ms;
+  --t-hover: 180ms;
+  --t-ui: 240ms;
+  --t-reveal: 800ms;
+}
+
+// A block on a candy field names its colour once (data-field="mint"); styles read var(--field).
+[data-field='mint'] {
+  --field: var(--mint);
+}
+
+[data-field='cyan'] {
+  --field: var(--cyan);
+}
+
+[data-field='lemon'] {
+  --field: var(--lemon);
+}
+
+[data-field='orange'] {
+  --field: var(--orange);
+}
+
+[data-field='sky'] {
+  --field: var(--sky);
+}
+
+// Headings on the landing page break into lines of even length, never leaving one word alone.
+app-landing-page :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+app-landing-page p {
+  text-wrap: pretty;
+}
+
+// The landing page is dark from edge to edge, overscroll included.
+:root:has(app-landing-page) {
+  background: var(--bg);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// The page's one button: flat, square, one fill. A section may change its fill and ink.
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.15rem;
+  border: 0;
+  background: var(--button-bg, var(--accent));
+  color: var(--button-ink, var(--accent-ink));
+  font: 600 var(--step-small) / 1.2 var(--font);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--t-hover) var(--ease-out);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.97);
+    transition-duration: var(--t-press);
+  }
+}
+
+// Entrances added by RevealDirective. The hidden state only exists once the directive has attached
+// an observer (it adds .reveal), so nothing stays hidden where the observer is missing.
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .reveal--rise {
+    transition:
+      opacity 700ms var(--ease-out) var(--reveal-delay, 0ms),
+      transform var(--t-reveal) var(--ease-expo) var(--reveal-delay, 0ms);
+  }
+
+  .reveal--rise:not(.is-in) {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}

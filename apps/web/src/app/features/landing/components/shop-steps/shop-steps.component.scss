@@ -1,0 +1,194 @@
+// Plain layout (phones, tablets, reduced motion): the photograph as a band across the top, then the
+// heading and the cards in a column. `.is-pinned` (desktop with motion) holds the stage and the whole
+// run travels sideways over the photograph, now the stage's backdrop, cut off at the page margins.
+:host {
+  display: block;
+}
+
+.steps {
+  position: relative;
+  view-timeline-name: --steps;
+}
+
+.steps__stage {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-bottom: clamp(4.5rem, 9vw, 7rem);
+}
+
+// The supplied picture is small (626px wide), so it is never stretched over a tall column.
+.steps__photo {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  max-height: 60svh;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.steps__intro {
+  max-width: 40rem;
+  margin-top: 2.5rem;
+  padding-inline: var(--margin);
+}
+
+.steps__title {
+  margin: 0;
+  font: 600 var(--step-head) / 1 var(--font);
+  letter-spacing: -0.035em;
+}
+
+.steps__lede {
+  max-width: 34ch;
+  margin: 1rem 0 0;
+  font-size: var(--step-body);
+  line-height: 1.5;
+}
+
+.steps__track {
+  display: grid;
+  gap: 1.5rem;
+  margin: 2.5rem 0 0;
+  padding: 0 var(--margin);
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--field);
+  color: var(--on-field);
+}
+
+.card__ui {
+  flex: 1;
+  min-height: 15rem;
+  margin: 1rem 1rem 0;
+}
+
+.card__panel {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem 1rem 1.25rem;
+}
+
+.card__name {
+  margin: 0;
+  font: 600 var(--step-lead) / 1 var(--font);
+  letter-spacing: -0.03em;
+}
+
+.card__text {
+  margin: 0;
+  font-size: var(--step-body);
+  line-height: 1.4;
+}
+
+@media (min-width: 64rem) {
+  .steps.is-pinned {
+    .steps__stage {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      height: 100svh;
+      padding: 0;
+    }
+
+    // Held: the flat-lay becomes the stage's backdrop, a little darker so the cards stay on top.
+    .steps__photo {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      max-height: none;
+      aspect-ratio: auto;
+
+      img {
+        filter: brightness(0.72);
+      }
+    }
+
+    .steps__view {
+      flex: 1;
+      min-width: 0;
+      margin-inline: var(--margin);
+      overflow: clip;
+    }
+
+    .steps__run {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .steps__intro {
+      flex: 0 0 min(28rem, 32vw);
+      align-self: flex-start;
+      margin-top: 12svh;
+      padding: 0;
+    }
+
+    .steps__track {
+      display: flex;
+      flex: none;
+      gap: 2rem;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .card {
+      --card-h: min(30rem, 62svh);
+      flex: none;
+      width: calc(var(--card-h) * 9 / 7);
+      height: var(--card-h);
+    }
+
+    .card__ui {
+      flex: 0 0 66%;
+      min-height: 0;
+      margin: 1.25rem 1.25rem 0;
+    }
+
+    .card__panel {
+      flex: 1;
+      grid-template-columns: auto 1fr;
+      align-items: end;
+      gap: 1.5rem;
+      padding: 1rem 1.5rem 1.4rem;
+    }
+
+    .card__name {
+      font-size: var(--step-head);
+    }
+
+    .card__text {
+      justify-self: end;
+      max-width: 24ch;
+      text-align: right;
+    }
+  }
+}
+
+// The one moving picture: the held photograph eases back from a slight zoom as the section passes.
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .steps__photo img {
+      animation: settle linear both;
+      animation-timeline: --steps;
+    }
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: scale(1.12);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}

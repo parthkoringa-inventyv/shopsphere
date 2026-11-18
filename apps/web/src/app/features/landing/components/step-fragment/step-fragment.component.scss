@@ -1,0 +1,153 @@
+// The shop's interface in its own dark skin. Inside [data-ui] the product keeps its own borders.
+:host {
+  display: block;
+}
+
+.ui {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  height: 100%;
+  padding: 1rem 1.1rem;
+  overflow: hidden;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-small);
+  line-height: 1.35;
+}
+
+.ui__search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #3a3a3a; // taste-skill-ignore: the shop interface inside [data-ui] keeps its own lines
+}
+
+.ui__icon {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.ui__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.ui__chip {
+  padding: 0.15rem 0.55rem;
+  border: 1px solid #3a3a3a; // taste-skill-ignore: the shop interface inside [data-ui] keeps its own lines
+  color: var(--muted);
+
+  &.is-on {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+.ui__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 0.4rem;
+  border-bottom: 1px solid #2a2a2a; // taste-skill-ignore: the shop interface inside [data-ui] keeps its own lines
+
+  small {
+    display: block;
+    color: var(--muted);
+    font-size: inherit;
+  }
+}
+
+.ui__row--meta {
+  padding-block: 0;
+  border: 0;
+  color: var(--muted);
+}
+
+.ui__row--total {
+  border: 0;
+  font-size: var(--step-body);
+}
+
+.ui__stepper {
+  display: inline-flex;
+  gap: 0.7rem;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid #3a3a3a; // taste-skill-ignore: the shop interface inside [data-ui] keeps its own lines
+}
+
+.ui__button {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.5rem 0.9rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.ui__saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ui__heart {
+  flex: none;
+  width: 0.95rem;
+  height: 0.95rem;
+  fill: var(--orange);
+}
+
+.ui__link {
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.ui__note {
+  margin-top: auto;
+  color: var(--mint);
+}
+
+.ui__steps {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--muted);
+
+    &::before {
+      content: '';
+      flex: none;
+      width: 0.7rem;
+      height: 0.7rem;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+    }
+  }
+
+  .is-done {
+    color: var(--ink);
+
+    &::before {
+      border-color: var(--mint);
+      background: var(--mint);
+    }
+  }
+
+  .is-now {
+    color: var(--accent);
+  }
+}

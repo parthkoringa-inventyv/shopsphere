@@ -1,0 +1,93 @@
+:host {
+  display: block;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  max-width: 17rem;
+  height: auto;
+  margin-inline: auto;
+}
+
+.k {
+  fill: var(--on-field);
+}
+
+.w {
+  fill: var(--ink);
+}
+
+.stroke {
+  fill: none;
+  stroke: var(--on-field);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stroke--light {
+  stroke: var(--ink);
+  stroke-width: 5;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .loop {
+    animation-play-state: paused;
+  }
+
+  :host(.is-playing) .loop {
+    animation-play-state: running;
+  }
+
+  .turn {
+    transform-origin: 178px 80px;
+    animation: turn 6s linear infinite;
+  }
+
+  .pop {
+    transform-origin: 184px 44px;
+    animation: pop 2.6s var(--ease-out) infinite;
+  }
+
+  .nudge {
+    animation: nudge 1.6s var(--ease-in-out) infinite alternate;
+  }
+
+  .twinkle {
+    transform-origin: 120px 72px;
+    animation: twinkle 2.8s var(--ease-in-out) infinite alternate;
+  }
+}
+
+@keyframes turn {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes pop {
+  0%,
+  15% {
+    opacity: 0;
+    scale: 0.6;
+  }
+
+  35%,
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes nudge {
+  to {
+    translate: 8px 0;
+  }
+}
+
+@keyframes twinkle {
+  to {
+    scale: 0.9;
+  }
+}

@@ -1,0 +1,108 @@
+<svg
+  viewBox="0 0 640 360"
+  preserveAspectRatio="xMidYMid slice"
+  role="img"
+  focusable="false"
+  [attr.aria-label]="description()"
+>
+  @switch (scene()) {
+    @case ('shelf') {
+      <rect class="k" x="96" y="262" width="448" height="16" />
+      <rect class="k" x="150" y="278" width="12" height="30" />
+      <rect class="k" x="478" y="278" width="12" height="30" />
+      <rect class="cyan" x="128" y="200" width="136" height="62" />
+      <rect class="k" x="120" y="184" width="152" height="22" />
+      <rect class="w" x="170" y="220" width="52" height="24" />
+      <rect class="w" x="292" y="150" width="48" height="112" rx="12" />
+      <rect class="k" x="300" y="134" width="32" height="20" rx="4" />
+      <rect class="orange" x="292" y="194" width="48" height="18" />
+      <rect class="mint" x="362" y="240" width="152" height="22" rx="6" />
+      <rect class="sky" x="368" y="218" width="140" height="22" rx="6" />
+      <rect class="orange" x="374" y="196" width="128" height="22" rx="6" />
+      <rect class="k" x="420" y="196" width="34" height="8" />
+      <g class="loop swing">
+        <path class="line" d="M470 278 V304" />
+        <path class="k" d="M446 318 L460 304 H480 L494 318 V356 H446 Z" />
+        <circle class="lemon" cx="470" cy="317" r="4" />
+        <circle class="lemon" cx="457" cy="338" r="4.5" />
+        <circle class="lemon" cx="470" cy="338" r="4.5" />
+        <circle class="lemon" cx="483" cy="338" r="4.5" />
+      </g>
+    }
+    @case ('bag') {
+      <g transform="translate(159 38) scale(0.62)">
+        <path class="raised-line" d="M228,178 C228,58 380,58 380,178" />
+        <polygon class="inside" points="112,198 352,198 408,164 168,164" />
+        <g class="loop drop">
+          <circle class="lemon" cx="246" cy="150" r="34" />
+          <path
+            class="line"
+            d="M233 133 H259 M233 143 H259 M240 133 C260 133 260 153 240 153 L258 170"
+          />
+        </g>
+        <polygon class="raised" points="352,198 408,164 408,434 352,468" />
+        <polygon
+          class="k"
+          points="112,198 127,176 142,198 157,176 172,198 187,176 202,198 217,176 232,198 247,176 262,198 277,176 292,198 307,176 322,198 337,176 352,198 352,468 112,468"
+        />
+        <path class="handle" d="M162,224 C162,74 286,74 286,224" />
+        <circle class="cyan" cx="232" cy="349.2" r="84" />
+        <circle class="k" cx="232" cy="349.2" r="72" />
+        <circle class="cyan" cx="232" cy="349.2" r="58" />
+        <path class="w" d="M232,291.2 A58,58 0 0,1 232,407.2 A32.48,58 0 0,0 232,291.2 Z" />
+        <ellipse class="orbit" cx="232" cy="349.2" rx="22.04" ry="58" />
+        <ellipse class="orbit" cx="232" cy="349.2" rx="58" ry="15.08" />
+      </g>
+    }
+    @case ('road') {
+      <rect class="k" x="0" y="292" width="640" height="68" />
+      <g class="loop dashes">
+        @for (x of dashes; track x) {
+          <rect class="w" [attr.x]="x" y="322" width="44" height="8" />
+        }
+      </g>
+      <g class="loop bob">
+        <rect class="lemon" x="226" y="136" width="76" height="60" />
+        <rect class="k" x="257" y="136" width="14" height="60" />
+        <rect class="k" x="218" y="196" width="92" height="7" />
+        <rect class="k" x="226" y="203" width="74" height="15" rx="7" />
+        <path class="cyan" d="M212 266 C212 230 234 218 268 218 H304 V266 Z" />
+        <rect class="cyan" x="300" y="250" width="84" height="16" />
+        <path class="cyan" d="M376 266 L392 182 H410 L418 266 Z" />
+        <rect class="k" x="384" y="168" width="44" height="10" rx="5" />
+        <circle class="lemon" cx="420" cy="200" r="7" />
+      </g>
+      <g class="loop wheel">
+        <circle class="k" cx="252" cy="268" r="25" />
+        <circle class="w" cx="252" cy="268" r="10" />
+        <rect class="k" x="249" y="258" width="6" height="20" />
+      </g>
+      <g class="loop wheel">
+        <circle class="k" cx="410" cy="268" r="25" />
+        <circle class="w" cx="410" cy="268" r="10" />
+        <rect class="k" x="407" y="258" width="6" height="20" />
+      </g>
+    }
+    @case ('door') {
+      <rect class="k" x="0" y="300" width="640" height="60" />
+      <rect class="w" x="350" y="56" width="182" height="244" />
+      <rect class="k" x="362" y="68" width="158" height="232" />
+      <rect class="cyan" x="384" y="92" width="114" height="58" />
+      <circle class="lemon" cx="496" cy="196" r="7" />
+      <rect class="mint" x="318" y="294" width="246" height="12" />
+      <rect class="lemon" x="198" y="226" width="114" height="74" />
+      <rect class="k" x="247" y="226" width="16" height="74" />
+      <rect class="w" x="212" y="244" width="26" height="18" />
+      <g class="loop pop">
+        <circle class="mint" cx="255" cy="194" r="20" />
+        <path class="line" d="M245 194 L252 201 L266 187" />
+      </g>
+      <rect class="orange" x="128" y="250" width="48" height="50" />
+      <g class="loop sway">
+        <path class="mint" d="M152 252 C128 232 126 206 144 194 C150 218 156 234 152 252 Z" />
+        <path class="mint" d="M152 252 C176 232 180 210 166 196 C158 220 152 234 152 252 Z" />
+        <path class="k" d="M152 252 C150 226 152 204 156 184 C162 206 160 230 152 252 Z" />
+      </g>
+    }
+  }
+</svg>

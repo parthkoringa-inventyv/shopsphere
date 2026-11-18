@@ -1,0 +1,47 @@
+<footer class="footer" aria-labelledby="footer-title">
+  <div class="tiles">
+    <div class="tile tile--statement">
+      <h2 class="tile__statement" id="footer-title">
+        One online shop, from our shelf to your door.
+      </h2>
+      <p class="tile__legal">© 2026 ShopSphere. Prices in rupees. Opening soon.</p>
+    </div>
+
+    <nav class="tile tile--nav" id="site-links" aria-label="Site">
+      <ul class="tile__links">
+        @for (link of links; track link.fragment) {
+          <li>
+            <a routerLink="/" [fragment]="link.fragment">{{ link.label }}</a>
+          </li>
+        }
+        <li><a routerLink="/" fragment="top">Back to the top</a></li>
+      </ul>
+    </nav>
+
+    <div class="tile tile--picture">
+      <img
+        [ngSrc]="picture.src"
+        [alt]="picture.alt"
+        [width]="picture.width"
+        [height]="picture.height"
+      />
+    </div>
+
+    <div class="tile tile--status">
+      <p class="tile__note">While the shop is being built, its API's live checks are public.</p>
+      <!-- Temporary while the shop is being built: the API's live status page. -->
+      <a class="tile__status" routerLink="/health">System status</a>
+    </div>
+
+    <div class="tile tile--brand">
+      <app-logo variant="lockup" />
+    </div>
+
+    <a class="tile tile--action" routerLink="/" fragment="what-if">
+      <span class="tile__invite">Try a what-if</span>
+      <svg class="tile__arrow" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <path d="M10 38 38 10 M17 10 H38 V31" />
+      </svg>
+    </a>
+  </div>
+</footer>

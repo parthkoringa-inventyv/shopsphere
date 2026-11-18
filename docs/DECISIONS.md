@@ -13,7 +13,7 @@ Record decisions as they are made. Newest decisions go first.
 ## ADR-0002 — PostgreSQL is the source of truth
 
 - **Status:** Accepted
-- **Decision:** Store durable business records in PostgreSQL. Redis is not authoritative for orders, payments, inventory or account state.
+- **Decision:** Store durable business records in PostgreSQL. Redis may be used for disposable cache data, sessions and temporary coordination, but is never authoritative for orders, payments, inventory or account state. The application must define safe behavior when Redis is unavailable, and cache data must be rebuildable.
 - **Consequences:** Correctness can rely on database constraints and transactions; cache data can be rebuilt.
 
 ## ADR-0003 — Prisma plus raw SQL
@@ -39,3 +39,11 @@ Record decisions as they are made. Newest decisions go first.
 - **Status:** Accepted
 - **Decision:** Deploy only to $0 plans, no paid trial, no automatic paid upgrades and no paid custom domain.
 - **Consequences:** Sleep/pausing/quotas and weaker reliability are accepted for a learning deployment. Re-check provider terms before provisioning.
+
+## ADR-0007 — Separate Express app construction from server startup
+
+- **Status:** Accepted
+- **Context:** The API needs to be testable without opening a network port, while production startup and process lifecycle need a clear owner.
+- **Decision:** Keep Express application construction in `app.ts` and HTTP server startup, signal handling and graceful shutdown in `server.ts`. Tests import the app factory directly and do not start a listener.
+- **Consequences:** Application tests remain isolated from network lifecycle concerns. Startup and shutdown behavior can be tested separately.
+- **Revisit when:** The application requires a different server runtime or a more complex process topology.

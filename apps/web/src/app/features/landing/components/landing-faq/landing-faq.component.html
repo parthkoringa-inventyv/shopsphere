@@ -1,0 +1,35 @@
+<section class="faq" id="questions" aria-labelledby="questions-title">
+  <div class="faq__text">
+    <h2 class="faq__title" id="questions-title" appReveal>Before you shop</h2>
+    <ul class="faq__facts" appReveal [revealDelay]="80">
+      @for (fact of facts; track fact) {
+        <li>{{ fact }}</li>
+      }
+    </ul>
+    <div class="faq__list">
+      @for (item of items; track item.question) {
+        <details class="faq__item">
+          <summary class="faq__question">{{ item.question }}</summary>
+          <p class="faq__answer">{{ item.answer }}</p>
+        </details>
+      }
+    </div>
+    <div class="faq__actions">
+      <a class="button" routerLink="/" fragment="how">See how it works</a>
+      <a class="faq__link" routerLink="/" fragment="top">Back to the top</a>
+    </div>
+  </div>
+  <div class="faq__pictures">
+    <div class="faq__main" appReveal [revealDelay]="120">
+      <img
+        [ngSrc]="photos.main.src"
+        [alt]="photos.main.alt"
+        [width]="photos.main.width"
+        [height]="photos.main.height"
+      />
+    </div>
+    <div class="faq__small" appReveal [revealDelay]="240">
+      <img [ngSrc]="photos.small.src" [alt]="photos.small.alt" fill />
+    </div>
+  </div>
+</section>

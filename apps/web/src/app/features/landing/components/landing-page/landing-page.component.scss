@@ -1,0 +1,15 @@
+// The page's ground and ink; the health page keeps its own look because none of this is global.
+:host {
+  display: block;
+  overflow-x: clip;
+  background: var(--bg);
+  color: var(--ink);
+  color-scheme: dark;
+  font-family: var(--font);
+  font-size: var(--step-body);
+  line-height: 1.5;
+}
+
+.page__main {
+  display: block;
+}

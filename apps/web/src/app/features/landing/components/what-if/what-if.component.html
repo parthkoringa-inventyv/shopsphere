@@ -1,0 +1,34 @@
+<section class="whatif" id="what-if" aria-labelledby="what-if-title">
+  <div class="whatif__head">
+    <h2 class="whatif__title" id="what-if-title" appReveal>What if it goes wrong?</h2>
+    <p class="whatif__lede" appReveal [revealDelay]="80">
+      Four things shoppers worry about, and what the shop does about each.
+    </p>
+  </div>
+  <ul class="fan" appReveal="custom">
+    @for (item of items; track item.id; let i = $index) {
+      <li
+        class="card"
+        [attr.data-field]="item.field"
+        [class.is-open]="isOpen(item.id)"
+        [style.--i]="i"
+      >
+        <h3 class="card__worry" [id]="'worry-' + item.id">{{ item.worry }}</h3>
+        <div class="card__middle">
+          <app-what-if-art class="card__art" [art]="item.id" />
+          <p class="card__answer" [id]="'answer-' + item.id">{{ item.answer }}</p>
+        </div>
+        <button
+          type="button"
+          class="button card__toggle"
+          [attr.aria-expanded]="isOpen(item.id)"
+          [attr.aria-controls]="'answer-' + item.id"
+          [attr.aria-describedby]="'worry-' + item.id"
+          (click)="toggle(item.id)"
+        >
+          {{ isOpen(item.id) ? 'Hide the answer' : 'What happens?' }}
+        </button>
+      </li>
+    }
+  </ul>
+</section>

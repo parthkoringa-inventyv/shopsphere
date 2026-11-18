@@ -1,0 +1,77 @@
+// Default colours are the "Candy on black" ones used in public/shopsphere-mark.svg.
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  color: inherit;
+}
+
+.logo__mark {
+  display: block;
+  width: auto;
+  height: var(--logo-size, 2.25rem);
+  overflow: visible;
+}
+
+.logo__back {
+  fill: none;
+  stroke: var(--logo-side, #2c9aa2);
+  stroke-width: 22;
+  stroke-linecap: round;
+}
+
+.logo__inside {
+  fill: var(--logo-inside, #1f7a80);
+}
+
+.logo__side {
+  fill: var(--logo-side, #2c9aa2);
+}
+
+.logo__fold {
+  stroke: var(--logo-fold, #5cc3ca);
+  stroke-width: 5;
+}
+
+.logo__front {
+  fill: var(--logo-front, #93f1f7);
+}
+
+.logo__handle {
+  fill: none;
+  stroke: var(--logo-handle, #f3ea7a);
+  stroke-width: 24;
+  stroke-linecap: round;
+}
+
+.logo__eyelet {
+  fill: none;
+  stroke: var(--logo-stamp, #0b0b0b);
+  stroke-width: 5;
+}
+
+.logo__ring {
+  fill: none;
+  stroke: var(--logo-stamp, #0b0b0b);
+  stroke-width: 11;
+}
+
+.logo__globe {
+  fill: var(--logo-stamp, #0b0b0b);
+}
+
+.logo__crescent {
+  fill: var(--logo-crescent, #f3ea7a);
+}
+
+.logo__orbit {
+  fill: none;
+  stroke: var(--logo-orbit, #93f1f7);
+  stroke-width: 7;
+}
+
+.logo__word {
+  font: 600 var(--logo-word-size, var(--step-lead)) / 1 var(--font);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}

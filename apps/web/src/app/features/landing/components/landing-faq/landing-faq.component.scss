@@ -1,0 +1,165 @@
+// One surface field split 5/7: the questions on the left; on the right a product picture at about
+// its own size with a smaller one over its lower-left corner, held beside the questions as they are
+// read. Phones lead with the pictures.
+:host {
+  display: block;
+}
+
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  padding: var(--section-space) var(--margin) clamp(5rem, 9vw, 8rem);
+  background: var(--surface);
+}
+
+.faq__pictures {
+  position: relative;
+  order: -1;
+  width: min(100%, 34rem);
+  margin-bottom: 2.5rem;
+}
+
+.faq__main img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.faq__small {
+  position: absolute;
+  right: -0.5rem;
+  bottom: -2.5rem;
+  width: 38%;
+  aspect-ratio: 1;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.faq__title {
+  margin: 0;
+  font: 600 var(--step-head) / 1 var(--font);
+  letter-spacing: -0.035em;
+}
+
+.faq__facts {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--step-body);
+  line-height: 1.45;
+}
+
+.faq__list {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.faq__question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 2.75rem;
+  font-size: var(--step-lead);
+  font-weight: 500;
+  line-height: 1.2;
+  list-style: none;
+  cursor: pointer;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  // The chevron: two 2px strokes, turning over when the answer opens.
+  &::after {
+    content: '';
+    flex: none;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    rotate: 45deg;
+    translate: 0 -0.2rem;
+    transition:
+      rotate var(--t-ui) var(--ease-out),
+      translate var(--t-ui) var(--ease-out);
+  }
+
+  &:hover::after {
+    translate: 0 0;
+  }
+}
+
+.faq__item[open] .faq__question::after {
+  rotate: -135deg;
+  translate: 0 0.2rem;
+}
+
+.faq__answer {
+  max-width: 52ch;
+  margin: 0.75rem 0 0;
+  font-size: var(--step-body);
+  line-height: 1.5;
+}
+
+.faq__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+  margin-top: 2.75rem;
+}
+
+.faq__link {
+  color: var(--ink);
+  font-size: var(--step-small);
+  font-weight: 500;
+  text-underline-offset: 0.35em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .faq__item[open] .faq__answer {
+    animation: open-answer 420ms var(--ease-out);
+  }
+}
+
+@keyframes open-answer {
+  from {
+    opacity: 0;
+    translate: 0 -0.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .faq {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    column-gap: var(--gutter);
+  }
+
+  .faq__text {
+    grid-column: 1 / span 5;
+  }
+
+  .faq__pictures {
+    position: sticky;
+    top: 18svh;
+    order: 0;
+    grid-column: 7 / -1;
+    justify-self: end;
+    margin: 0 0 2.5rem;
+  }
+
+  .faq__small {
+    right: auto;
+    left: -2.5rem;
+    width: 13rem;
+  }
+}

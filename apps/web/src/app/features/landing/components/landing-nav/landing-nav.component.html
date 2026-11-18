@@ -1,0 +1,14 @@
+<nav class="nav" aria-label="Main">
+  <a class="nav__home" routerLink="/" fragment="top">
+    <app-logo variant="lockup" />
+  </a>
+  <ul class="nav__links">
+    @for (link of links; track link.fragment) {
+      <li>
+        <a class="nav__link" routerLink="/" [fragment]="link.fragment">{{ link.label }}</a>
+      </li>
+    }
+  </ul>
+  <a class="nav__link nav__menu" routerLink="/" fragment="site-links">Menu</a>
+  <a class="button" routerLink="/" fragment="what-if">Try a what-if</a>
+</nav>

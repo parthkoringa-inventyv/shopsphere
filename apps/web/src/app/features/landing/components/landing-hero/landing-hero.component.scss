@@ -1,0 +1,187 @@
+// Plain layout first (reduced motion, no script): every frame in normal flow. `.is-pinned` (set by
+// ScrollStageDirective) holds the stage and runs the reel between the halves of the headline.
+:host {
+  display: block;
+}
+
+.hero {
+  --bar-h: 4.5rem;
+  --caption-h: 3.25rem;
+  --frame-h: calc(var(--frame-w) * 3 / 4);
+  --item-h: calc(var(--frame-h) + var(--caption-h));
+  position: relative;
+}
+
+.hero__stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--frame-w) minmax(0, 1fr);
+  // Plain: the headline sits level with the first frame of the column beside it.
+  grid-template-rows: calc(2rem + var(--frame-h) / 2 - var(--step-display) * 0.46) auto auto 1fr;
+  column-gap: var(--gutter);
+  min-height: 100svh;
+  padding: var(--bar-h) var(--margin) 0;
+}
+
+.hero__bar {
+  position: absolute;
+  inset: 0 var(--margin) auto;
+  z-index: 2;
+}
+
+.hero__title {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--gutter);
+  margin: 0;
+  font: 600 var(--step-display) / 0.92 var(--font);
+  letter-spacing: -0.04em;
+}
+
+.hero__half {
+  white-space: nowrap;
+}
+
+.hero__lede {
+  grid-column: 1;
+  grid-row: 3;
+  align-self: start;
+  max-width: 30ch;
+  margin: 2.5rem 0 0;
+  font-size: var(--step-body);
+  line-height: 1.5;
+}
+
+.hero__window {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  position: relative;
+}
+
+.hero__reel {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 0;
+  padding: 2rem 0;
+  list-style: none;
+}
+
+.hero__ghost {
+  display: none;
+}
+
+.hero__figure {
+  margin: 0;
+}
+
+.hero__frame {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--field);
+}
+
+.hero__caption {
+  height: var(--caption-h);
+  padding-top: 0.75rem;
+  color: var(--muted);
+  font-size: var(--step-small);
+  line-height: 1.35;
+}
+
+// Held: the reel's current frame sits on the headline's line, its neighbours peek at the edges.
+.hero.is-pinned {
+  .hero__stage {
+    position: sticky;
+    top: 0;
+    grid-template-rows: 1fr auto 1fr;
+    height: 100svh;
+    overflow: clip;
+  }
+
+  .hero__window {
+    overflow: clip;
+  }
+
+  .hero__reel {
+    position: absolute;
+    inset: var(--reel-top) 0 auto;
+    gap: var(--reel-gap);
+    padding: 0;
+  }
+
+  .hero__ghost {
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + var(--reel-gap));
+    left: 0;
+    padding-bottom: var(--caption-h);
+  }
+}
+
+@media (min-width: 64rem) {
+  .hero {
+    --frame-w: 32vw;
+    --window-h: calc(100svh - var(--bar-h));
+    --reel-top: calc((var(--window-h) - var(--frame-h)) / 2);
+    --reel-gap: calc(var(--window-h) / 2 - var(--frame-h) / 2 - var(--caption-h) - 60px);
+  }
+}
+
+// Phones and tablets: the halves stack, and when held the reel's window sits between them.
+@media (max-width: 63.99rem) {
+  .hero {
+    --frame-w: min(100vw - 2 * var(--margin), 34rem, (100svh - 29.25rem) * 4 / 3);
+    --sliver: 28px;
+    --reel-gap: 0.75rem;
+    --reel-top: calc(var(--sliver) + var(--reel-gap));
+    --window-h: calc(var(--item-h) + 2 * (var(--sliver) + var(--reel-gap)));
+  }
+
+  .hero__stage {
+    display: block;
+    padding: calc(var(--bar-h) + 0.5rem) var(--margin) 2.5rem;
+  }
+
+  .hero__title {
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 0.75rem;
+  }
+
+  .hero__half--end {
+    justify-self: end;
+  }
+
+  .hero__lede {
+    margin-top: 1.5rem;
+  }
+
+  .hero__window {
+    width: var(--frame-w);
+    margin: 1.5rem auto 0;
+  }
+
+  .hero.is-pinned {
+    .hero__title {
+      grid-template-rows: auto var(--window-h) auto;
+    }
+
+    .hero__half--end {
+      grid-row: 3;
+    }
+
+    .hero__window {
+      position: absolute;
+      top: calc(var(--bar-h) + 0.5rem + var(--step-display) * 0.92 + 0.75rem);
+      left: 50%;
+      height: var(--window-h);
+      margin: 0;
+      translate: -50% 0;
+    }
+  }
+}

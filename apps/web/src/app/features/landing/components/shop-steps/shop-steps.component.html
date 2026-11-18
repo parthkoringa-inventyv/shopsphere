@@ -1,0 +1,36 @@
+<section
+  class="steps"
+  id="how"
+  aria-labelledby="how-title"
+  appScrollStage="x"
+  [stageTrack]="run"
+  [stageMinWidth]="1024"
+  [stageSpeed]="1.6"
+>
+  <div class="steps__stage">
+    <div class="steps__photo">
+      <img [ngSrc]="photo.src" [alt]="photo.alt" fill />
+    </div>
+    <div class="steps__view">
+      <div class="steps__run" #run>
+        <div class="steps__intro">
+          <h2 class="steps__title" id="how-title" appReveal>How shopping works</h2>
+          <p class="steps__lede" appReveal [revealDelay]="80">
+            Five steps from the first search to the parcel in your hands.
+          </p>
+        </div>
+        <ol class="steps__track">
+          @for (step of steps; track step.id) {
+            <li class="card" [attr.data-field]="step.field">
+              <app-step-fragment class="card__ui" [step]="step.id" [label]="step.fragmentLabel" />
+              <div class="card__panel">
+                <h3 class="card__name">{{ step.name }}</h3>
+                <p class="card__text">{{ step.description }}</p>
+              </div>
+            </li>
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>

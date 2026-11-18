@@ -1,0 +1,28 @@
+<svg
+  class="logo__mark"
+  viewBox="100 64 320 416"
+  focusable="false"
+  [attr.role]="variant() === 'mark' ? 'img' : null"
+  [attr.aria-label]="variant() === 'mark' ? label() : null"
+  [attr.aria-hidden]="variant() === 'lockup' ? 'true' : null"
+>
+  <path class="logo__back" d="M228,178 C228,58 380,58 380,178" />
+  <polygon class="logo__inside" points="112,198 352,198 408,164 168,164" />
+  <polygon class="logo__side" points="352,198 408,164 408,434 352,468" />
+  <path class="logo__fold" d="M380,199 V445" />
+  <polygon
+    class="logo__front"
+    points="112,198 127,176 142,198 157,176 172,198 187,176 202,198 217,176 232,198 247,176 262,198 277,176 292,198 307,176 322,198 337,176 352,198 352,468 112,468"
+  />
+  <path class="logo__handle" d="M162,224 C162,74 286,74 286,224" />
+  <circle class="logo__eyelet" cx="162" cy="224" r="16" />
+  <circle class="logo__eyelet" cx="286" cy="224" r="16" />
+  <circle class="logo__ring" cx="232" cy="349.2" r="84" />
+  <circle class="logo__globe" cx="232" cy="349.2" r="58" />
+  <path class="logo__crescent" d="M232,291.2 A58,58 0 0,1 232,407.2 A32.48,58 0 0,0 232,291.2 Z" />
+  <ellipse class="logo__orbit" cx="232" cy="349.2" rx="22.04" ry="58" />
+  <ellipse class="logo__orbit" cx="232" cy="349.2" rx="58" ry="15.08" />
+</svg>
+@if (variant() === 'lockup') {
+  <span class="logo__word">{{ label() }}</span>
+}

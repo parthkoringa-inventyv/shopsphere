@@ -1,0 +1,42 @@
+<header
+  class="hero"
+  id="top"
+  appScrollStage="y"
+  [stageTrack]="reel"
+  [stageSpeed]="1.6"
+  stageItem=".hero__item"
+>
+  <div class="hero__stage">
+    <app-landing-nav class="hero__bar" />
+    <!-- &ngsp; keeps one real space between the halves, so the title reads as one sentence. -->
+    <h1 class="hero__title">
+      <span class="hero__half">From our shelf</span>&ngsp;<span class="hero__half hero__half--end"
+        >to your door</span
+      >
+    </h1>
+    <p class="hero__lede">
+      ShopSphere is one online shop for everything it stocks, priced in rupees and packed by us,
+      with every order tracked until it reaches you.
+    </p>
+    <div class="hero__window">
+      <ol class="hero__reel" #reel aria-label="An order's trip">
+        <!-- The end of the last trip, peeking in above the first frame so the reel reads as running. -->
+        <li class="hero__ghost" aria-hidden="true">
+          <div class="hero__frame" data-field="sky">
+            <app-journey-scene scene="door" description="" />
+          </div>
+        </li>
+        @for (frame of frames; track frame.id) {
+          <li class="hero__item">
+            <figure class="hero__figure">
+              <div class="hero__frame" [attr.data-field]="frame.field">
+                <app-journey-scene [scene]="frame.id" [description]="frame.description" />
+              </div>
+              <figcaption class="hero__caption">{{ frame.caption }}</figcaption>
+            </figure>
+          </li>
+        }
+      </ol>
+    </div>
+  </div>
+</header>
