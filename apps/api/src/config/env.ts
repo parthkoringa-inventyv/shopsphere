@@ -18,11 +18,21 @@ const envSchema = z.object({
     return url.protocol === 'postgresql:' || url.protocol === 'postgres:';
   }, 'DATABASE_URL must be a valid PostgreSQL connection URL'),
 
+  REDIS_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
+
   REDIS_HOST: z.string().trim().min(1).default('127.0.0.1'),
 
   REDIS_PORT: z.coerce.number().int().min(1).max(65535).default(6379),
 
-  REDIS_PASSWORD: z.string().min(1, 'REDIS_PASSWORD must not be empty'),
+  REDIS_PASSWORD: z.string().trim().min(1).optional(),
+}).superRefine((values, ctx) => {
+  if (values.REDIS_ENABLED && !values.REDIS_PASSWORD) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['REDIS_PASSWORD'],
+      message: 'REDIS_PASSWORD is required when REDIS_ENABLED is true',
+    });
+  }
 });
 
 const result = envSchema.safeParse(process.env);

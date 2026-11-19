@@ -8,7 +8,7 @@ export const redis = createClient({
     host: env.REDIS_HOST,
     port: env.REDIS_PORT,
   },
-  password: env.REDIS_PASSWORD,
+  ...(env.REDIS_PASSWORD && { password: env.REDIS_PASSWORD }),
 });
 
 // Handle connection errors through our shared application logger.
@@ -16,20 +16,44 @@ redis.on('error', (error: Error) => {
   logger.error({ err: error }, 'Redis client error');
 });
 
-let connectionStarted = false;
+let connectionPromise: Promise<void> | undefined;
 
-export function startRedisConnection(): void {
-  if (connectionStarted || redis.isOpen) {
+export function startRedisConnection(): Promise<void> {
+  if (redis.isReady || redis.isOpen) {
+    return connectionPromise ?? Promise.resolve();
+  }
+
+  if (connectionPromise) {
+    return connectionPromise;
+  }
+
+  const pendingConnection: Promise<void> = redis
+    .connect()
+    .then(() => undefined)
+    .catch((error: unknown) => {
+      logger.error({ err: error }, 'Redis initial connection failed');
+      throw error;
+    })
+    .finally(() => {
+      connectionPromise = undefined;
+    });
+
+  connectionPromise = pendingConnection;
+
+  return pendingConnection;
+}
+
+export async function closeRedisConnection(): Promise<void> {
+  if (!redis.isOpen) {
     return;
   }
 
-  connectionStarted = true;
+  if (redis.isReady) {
+    await redis.close();
+    return;
+  }
 
-  void redis.connect().catch((error: unknown) => {
-    connectionStarted = false;
-
-    logger.error({ err: error }, 'Redis initial connection failed');
-  });
+  redis.destroy();
 }
 
 async function withTimeout<T>(operation: Promise<T>, timeoutMs: number): Promise<T> {

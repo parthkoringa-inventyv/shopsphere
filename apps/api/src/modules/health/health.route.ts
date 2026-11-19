@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { checkDatabaseConnection } from '../../config/database.js';
 import { checkRedisConnection } from '../../config/redis.js';
+import { env } from '../../config/env.js';
 
 const healthRouter = Router();
 
@@ -15,9 +16,14 @@ healthRouter.get('/live', (_req, res) => {
 });
 
 healthRouter.get('/ready', async (req, res) => {
+  const databaseCheck = checkDatabaseConnection();
+  const redisCheck = env.REDIS_ENABLED
+    ? checkRedisConnection()
+    : Promise.resolve();
+
   const [databaseResult, redisResult] = await Promise.allSettled([
-    checkDatabaseConnection(),
-    checkRedisConnection(),
+    databaseCheck,
+    redisCheck,
   ]);
 
   const unavailableDependencies: string[] = [];
@@ -25,13 +31,19 @@ healthRouter.get('/ready', async (req, res) => {
   if (databaseResult.status === 'rejected') {
     unavailableDependencies.push('postgres');
 
-    req.log.error({ err: databaseResult.reason }, 'PostgreSQL readiness check failed');
+    req.log.error(
+      { err: databaseResult.reason },
+      'PostgreSQL readiness check failed',
+    );
   }
 
-  if (redisResult.status === 'rejected') {
+  if (env.REDIS_ENABLED && redisResult.status === 'rejected') {
     unavailableDependencies.push('redis');
 
-    req.log.error({ err: redisResult.reason }, 'Redis readiness check failed');
+    req.log.error(
+      { err: redisResult.reason },
+      'Redis readiness check failed',
+    );
   }
 
   if (unavailableDependencies.length > 0) {

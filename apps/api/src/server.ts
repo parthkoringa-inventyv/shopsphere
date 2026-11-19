@@ -4,7 +4,7 @@ import { createApp } from './app.js';
 import { env } from './config/env.js';
 import { logger } from './config/logger.js';
 import { prisma } from './config/prisma.js';
-import { redis, startRedisConnection } from './config/redis.js';
+import { closeRedisConnection, startRedisConnection } from './config/redis.js';
 
 const app = createApp();
 const server = createServer(app);
@@ -41,7 +41,7 @@ async function shutdown(signal: NodeJS.Signals): Promise<void> {
 
   // Close external dependencies after HTTP requests have finished.
   const results = await Promise.allSettled([
-    redis.isOpen ? redis.close() : Promise.resolve(),
+    closeRedisConnection(),
     prisma.$disconnect(),
   ]);
 
@@ -70,7 +70,11 @@ process.once('SIGTERM', () => {
 });
 
 // Start Redis without blocking HTTP server startup.
-startRedisConnection();
+if (env.REDIS_ENABLED) {
+  void startRedisConnection().catch(() => {
+    // The connection failure is already logged by the Redis module.
+  });
+}
 
 server.listen(env.PORT, env.HOST, () => {
   logger.info(

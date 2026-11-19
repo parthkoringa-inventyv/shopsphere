@@ -10,6 +10,7 @@ import { checkRedisConnection } from '../src/config/redis.js';
 import { logger } from '../src/config/logger.js';
 import { AppError } from '../src/common/errors/app-error.js';
 import { errorHandler } from '../src/common/middleware/error.middleware.js';
+import { env } from '../src/config/env.js';
 
 // Mock the external dependencies used by the readiness endpoint.
 vi.mock('../src/config/database.js', () => ({
@@ -56,7 +57,9 @@ const errorTestApp = createErrorTestApp();
 
 describe('API health and error handling', () => {
   beforeEach(() => {
-    // Default behavior: both dependencies are available.
+    // Keep tests deterministic: Redis is enabled by default.
+    env.REDIS_ENABLED = true;
+
     vi.mocked(checkDatabaseConnection).mockResolvedValue(undefined);
     vi.mocked(checkRedisConnection).mockResolvedValue(undefined);
   });
@@ -140,6 +143,35 @@ describe('API health and error handling', () => {
 
       expect(checkDatabaseConnection).toHaveBeenCalledOnce();
       expect(checkRedisConnection).toHaveBeenCalledOnce();
+    });
+
+    it('should return 200 when Redis is disabled and PostgreSQL is available', async () => {
+      env.REDIS_ENABLED = false;
+
+      const response = await request(app).get('/api/v1/health/ready');
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.status).toBe('ready');
+
+      expect(checkDatabaseConnection).toHaveBeenCalledOnce();
+      expect(checkRedisConnection).not.toHaveBeenCalled();
+    });
+
+    it('should return 503 when Redis is disabled but PostgreSQL is unavailable', async () => {
+      env.REDIS_ENABLED = false;
+
+      vi.mocked(checkDatabaseConnection).mockRejectedValue(
+        new Error('PostgreSQL connection failed'),
+      );
+
+      const response = await request(app).get('/api/v1/health/ready');
+
+      expect(response.status).toBe(503);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error.code).toBe('SERVICE_UNAVAILABLE');
+
+      expect(checkDatabaseConnection).toHaveBeenCalledOnce();
+      expect(checkRedisConnection).not.toHaveBeenCalled();
     });
   });
 
