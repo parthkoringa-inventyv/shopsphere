@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiOrigin: 'http://localhost:3100',
+  apiOrigin: 'https://shopsphere-19r8.onrender.com',
 };
