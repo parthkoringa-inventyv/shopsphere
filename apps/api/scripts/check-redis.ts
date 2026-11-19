@@ -1,4 +1,8 @@
-import { checkRedisConnection, closeRedisConnection, startRedisConnection } from '../src/config/redis.js';
+import {
+  checkRedisConnection,
+  closeRedisConnection,
+  startRedisConnection,
+} from '../src/config/redis.js';
 import { env } from '../src/config/env.js';
 
 if (!env.REDIS_ENABLED) {
@@ -20,4 +24,3 @@ if (!env.REDIS_ENABLED) {
     await closeRedisConnection();
   }
 }
-

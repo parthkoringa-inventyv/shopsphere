@@ -40,10 +40,7 @@ async function shutdown(signal: NodeJS.Signals): Promise<void> {
   }
 
   // Close external dependencies after HTTP requests have finished.
-  const results = await Promise.allSettled([
-    closeRedisConnection(),
-    prisma.$disconnect(),
-  ]);
+  const results = await Promise.allSettled([closeRedisConnection(), prisma.$disconnect()]);
 
   const dependencyNames = ['Redis', 'Prisma'];
 

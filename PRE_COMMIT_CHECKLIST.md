@@ -6,6 +6,12 @@ formatted, type-safe, tested, and buildable.
 > Run commands from the repository root unless a step says otherwise.
 > The API and Angular app have separate `package.json` files, so run
 > their scripts from their respective directories.
+>
+> Use the Node.js version pinned in `.nvmrc` (CI reads the same file).
+> With nvm, run `nvm use` from the repository root.
+>
+> Sections 2 and 3 mirror the `api` and `web` jobs in
+> `.github/workflows/ci.yml`. If CI changes, update this checklist too.
 
 ## 1. Review the changes
 
@@ -31,7 +37,29 @@ cd apps/api
 
 Run these scripts in order.
 
-### 2.1 Formatting
+### 2.1 Install dependencies
+
+``` bash
+npm ci
+```
+
+CI starts from a clean install, so do the same. `npm ci` deletes
+`node_modules` and reinstalls exactly what `package-lock.json` pins. If
+a script fails with `command not found` (for example
+`prettier: not found` or `tsc: not found`), `node_modules` is missing or
+incomplete and this step fixes it.
+
+### 2.2 Generate Prisma Client
+
+``` bash
+npm run db:generate
+```
+
+The generated client in `src/generated/prisma` is git-ignored, but the
+API source imports it, so type checking and tests fail without it. This
+step does not need a database or a `.env` file.
+
+### 2.3 Formatting
 
 ``` bash
 npm run format:check
@@ -44,7 +72,7 @@ npm run format
 npm run format:check
 ```
 
-### 2.2 Lint
+### 2.4 Lint
 
 ``` bash
 npm run lint
@@ -52,7 +80,7 @@ npm run lint
 
 Fix lint errors rather than suppressing rules without a clear reason.
 
-### 2.3 Type check
+### 2.5 Type check
 
 ``` bash
 npm run typecheck
@@ -61,7 +89,7 @@ npm run typecheck
 This runs TypeScript with `tsc --noEmit`; it checks types without
 producing build output.
 
-### 2.4 Tests
+### 2.6 Tests
 
 ``` bash
 npm test
@@ -71,7 +99,7 @@ All tests must pass. Error-level log entries from tests deliberately
 exercising error handling can be expected; check the test result rather
 than treating every log line as a failure.
 
-### 2.5 Production build
+### 2.7 Production build
 
 ``` bash
 npm run build
@@ -91,7 +119,16 @@ cd ../..
 cd apps/web
 ```
 
-### 3.1 Formatting
+### 3.1 Install dependencies
+
+``` bash
+npm ci
+```
+
+Same as the API: CI starts from a clean install from
+`package-lock.json`.
+
+### 3.2 Formatting
 
 ``` bash
 npm run format:check
@@ -104,13 +141,13 @@ npm run format
 npm run format:check
 ```
 
-### 3.2 Lint
+### 3.3 Lint
 
 ``` bash
 npm run lint
 ```
 
-### 3.3 Tests
+### 3.4 Tests
 
 ``` bash
 npm test -- --watch=false
@@ -119,7 +156,7 @@ npm test -- --watch=false
 The `--watch=false` flag makes the test command finish after the test
 run, suitable for a pre-commit check.
 
-### 3.4 Type check and production compilation
+### 3.5 Type check and production compilation
 
 ``` bash
 npm run build

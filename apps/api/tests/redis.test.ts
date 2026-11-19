@@ -1,4 +1,3 @@
-
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const redisMock = vi.hoisted(() => {
@@ -130,9 +129,7 @@ describe('Redis connection lifecycle', () => {
       throw new Error('Redis connection failed');
     });
 
-    await expect(startRedisConnection()).rejects.toThrow(
-      'Redis connection failed',
-    );
+    await expect(startRedisConnection()).rejects.toThrow('Redis connection failed');
   });
 
   it('allows another connection attempt after a terminal failure', async () => {
@@ -146,9 +143,7 @@ describe('Redis connection lifecycle', () => {
         redisMock.state.isReady = true;
       });
 
-    await expect(startRedisConnection()).rejects.toThrow(
-      'Redis connection failed',
-    );
+    await expect(startRedisConnection()).rejects.toThrow('Redis connection failed');
 
     await startRedisConnection();
 
@@ -193,9 +188,7 @@ describe('Redis connection lifecycle', () => {
   });
 
   it('rejects the readiness check when the client is not ready', async () => {
-    await expect(checkRedisConnection()).rejects.toThrow(
-      'Redis client is not ready',
-    );
+    await expect(checkRedisConnection()).rejects.toThrow('Redis client is not ready');
 
     expect(redisMock.ping).not.toHaveBeenCalled();
   });
